@@ -49,14 +49,18 @@ map.append([biomes.biomes[biome]["surface"]] * 64)
 map.append([biomes.biomes[biome]["middle"]] * 64)
 
 if biomes.biomes[biome]["trees"]["enabled"]:
-    for i in range(64):
-        if random.randint(0, 3) == 3:
+    tree = False
+    for i in range(63):
+        if random.randint(0, 3) == 3 and not tree:
             map[4][i] = biomes.biomes[biome]["trees"]["log"]
             map[3][i] = biomes.biomes[biome]["trees"]["log"]
             map[2][i] = biomes.biomes[biome]["trees"]["leaves"]
             map[1][i] = biomes.biomes[biome]["trees"]["leaves"]
             map[2][i + 1] = biomes.biomes[biome]["trees"]["leaves"]
             map[2][i - 1] = biomes.biomes[biome]["trees"]["leaves"]
+            tree = True
+        else:
+            tree = False
 
 for i in range(10):
     map.append([biomes.biomes[biome]["bottom"]] * 64)
