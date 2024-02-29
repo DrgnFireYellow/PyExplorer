@@ -32,13 +32,13 @@ def load_map(map):
     solids = []
     for ycoord,  y in enumerate(map):
         for xcoord, x in enumerate(y):
-            window.blit(tiles.tiles[x], (xcoord * tiles.TILESIZE, ycoord * tiles.TILESIZE))
+            window.blit(tiles.tiles[x], (xcoord * tiles.TILESIZE - player_x, ycoord * tiles.TILESIZE - player_y))
             if x:
-                solids.append(pygame.Rect(xcoord * tiles.TILESIZE, ycoord * tiles.TILESIZE, tiles.TILESIZE, tiles.TILESIZE))
+                solids.append(pygame.Rect(xcoord * tiles.TILESIZE - player_x, ycoord * tiles.TILESIZE - player_y - 2, tiles.TILESIZE, tiles.TILESIZE))
 
 direction = 1
 
-biome = "forest"
+biome = "plains"
 
 map = []
 
@@ -73,13 +73,11 @@ while True:
         if event.type == pygame.MOUSEBUTTONUP:
             mouse_location = pygame.mouse.get_pos()
             player_tile = (round(player_x / tiles.TILESIZE), round(player_y / tiles.TILESIZE))
-            mouse_tile = (math.floor(mouse_location[0] / tiles.TILESIZE), math.floor(mouse_location[1] / tiles.TILESIZE))
-            if event.button == 3:
+            mouse_tile = (math.floor(mouse_location[0] / tiles.TILESIZE) + player_tile[0], math.floor(mouse_location[1] / tiles.TILESIZE) + player_tile[1])
+            if event.button == 3 and map[mouse_tile[1]][mouse_tile[0]] == 0:
                 map[mouse_tile[1]][mouse_tile[0]] = 1
             elif event.button == 1:
                 map[mouse_tile[1]][mouse_tile[0]] = 0
-            # if mouse_location[0] > player_x + tiles.TILESIZE:
-            #     map[player_tile[1]][player_tile[0] + 1] = 1
     
     old_player_x = player_x
     old_player_y = player_y
@@ -92,7 +90,7 @@ while True:
     player_y += 4
 
     for solid in solids:
-        if solid.colliderect(pygame.Rect(player_x, player_y, tiles.TILESIZE, tiles.TILESIZE * 2)):
+        if solid.colliderect(pygame.Rect(window.get_width() / 2, 0, tiles.TILESIZE, tiles.TILESIZE * 2)):
             player_x = old_player_x
             player_y = old_player_y
     
@@ -105,14 +103,11 @@ while True:
         player_x -= 2
         direction = -1
 
-    for solid in solids:
-        if solid.colliderect(pygame.Rect(player_x, player_y, tiles.TILESIZE, tiles.TILESIZE * 2)):
-            player_x = old_player_x
-            player_y = old_player_y
     if direction == 1:
-        window.blit(player_right, (player_x, player_y))
+        window.blit(player_right, (window.get_width() / 2, 0))
     elif direction == -1:
-        window.blit(player_left, (player_x, player_y))
+        window.blit(player_left, (window.get_width() / 2, 0))
     window.blit(font.render(f"FPS: {clock.get_fps()}", False, pygame.Color("white")), (0, 0))
+    window.blit(font.render(f"Position: {player_x}, {player_y}", False, pygame.Color("white")), (0, 10))
     pygame.display.update()
     clock.tick(60)
