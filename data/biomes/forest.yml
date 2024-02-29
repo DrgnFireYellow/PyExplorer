@@ -1,0 +1,8 @@
+surface: 2
+middle: 1
+bottom: 3
+
+trees:
+  enabled: yes
+  log: 4
+  leaves: 5
