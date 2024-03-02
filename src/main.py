@@ -68,11 +68,11 @@ def display_hotbar():
     displayx = 0
     for tile in tiles.tiles:
         if tile:
-            window.blit(tiles.tiles[tile], (displayx, 0))
+            tileicon = tiles.tiles[tile].copy()
             if tile == selected_hotbar_slot:
-                window.blit(hotbarfont.render(str(inventory[tile]), False, "blue"), (displayx, 0))
-            else:
-                window.blit(hotbarfont.render(str(inventory[tile]), False, "white"), (displayx, 0))
+                pygame.draw.rect(tileicon, "white", (0, 0, tiles.TILESIZE, tiles.TILESIZE), 4)
+            window.blit(tileicon, (displayx, 0))
+            window.blit(hotbarfont.render(str(inventory[tile]), False, "white"), (displayx, 0))
             hotbar_slots[tile] = pygame.Rect(displayx, 0, tiles.TILESIZE, tiles.TILESIZE)
             displayx += tiles.TILESIZE + 8
 
