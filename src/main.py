@@ -13,6 +13,7 @@ screeninfo = pygame.display.Info()
 clock = pygame.time.Clock()
 
 font = pygame.font.Font(pygame.font.get_default_font(), 10)
+hotbarfont = pygame.font.Font(pygame.font.get_default_font(), int(tiles.TILESIZE / 2))
 
 window = pygame.display.set_mode((screeninfo.current_w, screeninfo.current_h))
 pygame.display.set_caption("PyExplorer")
@@ -28,6 +29,12 @@ player_left = pygame.transform.flip(player_right, True, False)
 
 player_x = 0
 player_y = 0
+
+inventory = {}
+
+for tile in tiles.tiles:
+    if tile != 0:
+        inventory[tile] = 0
 
 WALK_SPEED = 3
 
@@ -53,6 +60,14 @@ def load_map(map):
                     )
                 )
 
+
+def display_hotbar():
+    displayx = 0
+    for tile in tiles.tiles:
+        if tile:
+            window.blit(tiles.tiles[tile], (displayx, 0))
+            window.blit(hotbarfont.render(str(inventory[tile]), False, "white"), (displayx, 0))
+            displayx += tiles.TILESIZE + 8
 
 direction = 1
 
@@ -100,10 +115,14 @@ while True:
                 math.floor(mouse_location[0] / tiles.TILESIZE) + player_tile[0],
                 math.floor(mouse_location[1] / tiles.TILESIZE) + player_tile[1],
             )
-            if event.button == 3 and map[mouse_tile[1]][mouse_tile[0]] == 0:
-                map[mouse_tile[1]][mouse_tile[0]] = 1
-            elif event.button == 1:
-                map[mouse_tile[1]][mouse_tile[0]] = 0
+            try:
+                if event.button == 3 and map[mouse_tile[1]][mouse_tile[0]] == 0:
+                    map[mouse_tile[1]][mouse_tile[0]] = 1
+                elif event.button == 1:
+                    inventory[map[mouse_tile[1]][mouse_tile[0]]] += 1
+                    map[mouse_tile[1]][mouse_tile[0]] = 0
+            except (IndexError, KeyError):
+                pass
 
     old_player_x = player_x
     old_player_y = player_y
@@ -154,6 +173,7 @@ while True:
         window.blit(player_right, (window.get_width() / 2, 0))
     elif direction == -1:
         window.blit(player_left, (window.get_width() / 2, 0))
+    display_hotbar()
     window.blit(
         font.render(f"FPS: {clock.get_fps()}", False, pygame.Color("white")), (0, 0)
     )
