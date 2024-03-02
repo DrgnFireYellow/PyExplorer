@@ -106,6 +106,8 @@ if biomes.biomes[biome]["trees"]["enabled"]:
 for i in range(10):
     map.append([biomes.biomes[biome]["bottom"]] * 64)
 
+map.append([6] * 64)
+
 jump_remaining = 0
 
 while True:
@@ -134,7 +136,7 @@ while True:
                         if hotbar_slots[slot].collidepoint(mouse_location):
                             hotbar_clicked = True
                             selected_hotbar_slot = slot
-                    if not hotbar_clicked:
+                    if not hotbar_clicked and map[mouse_tile[1]][mouse_tile[0]] != 6:
                         inventory[map[mouse_tile[1]][mouse_tile[0]]] += 1
                         map[mouse_tile[1]][mouse_tile[0]] = 0
             except (IndexError, KeyError):
