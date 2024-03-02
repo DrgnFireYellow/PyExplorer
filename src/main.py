@@ -29,6 +29,7 @@ player_left = pygame.transform.flip(player_right, True, False)
 player_x = 0
 player_y = 0
 
+WALK_SPEED = 3
 
 def load_map(map):
     global solids
@@ -115,11 +116,11 @@ while True:
     player_y += 4
 
     if keys[pygame.K_RIGHT]:
-        player_x += 2
+        player_x += WALK_SPEED
         direction = 1
 
     if keys[pygame.K_LEFT]:
-        player_x -= 2
+        player_x -= WALK_SPEED
         direction = -1
 
     player_rect = pygame.Rect(
@@ -135,12 +136,12 @@ while True:
                 player_rect.midright[0] < solid.midright[0]
                 and player_rect.midtop[1] + tiles.TILESIZE * 1.5 > solid.midtop[1]
             ):
-                player_x -= 2
+                player_x -= WALK_SPEED
             if (
                 player_rect.midright[0] > solid.midright[0]
                 and player_rect.midtop[1] + tiles.TILESIZE * 1.5 > solid.midtop[1]
             ):
-                player_x += 2
+                player_x += WALK_SPEED
 
     if keys[pygame.K_UP] and grounded:
         jump_remaining = tiles.TILESIZE * 2
