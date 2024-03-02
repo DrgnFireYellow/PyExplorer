@@ -7,7 +7,7 @@ import random
 
 pygame.init()
 print(f"Loaded {len(tiles.tiles)} tiles")
-
+print(f"Loaded {len(biomes.biomes)} biomes")
 
 screeninfo = pygame.display.Info()
 clock = pygame.time.Clock()
