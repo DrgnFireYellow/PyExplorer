@@ -61,13 +61,21 @@ def load_map(map):
                 )
 
 
+hotbar_slots = {}
+selected_hotbar_slot = 1
+
 def display_hotbar():
     displayx = 0
     for tile in tiles.tiles:
         if tile:
             window.blit(tiles.tiles[tile], (displayx, 0))
-            window.blit(hotbarfont.render(str(inventory[tile]), False, "white"), (displayx, 0))
+            if tile == selected_hotbar_slot:
+                window.blit(hotbarfont.render(str(inventory[tile]), False, "blue"), (displayx, 0))
+            else:
+                window.blit(hotbarfont.render(str(inventory[tile]), False, "white"), (displayx, 0))
+            hotbar_slots[tile] = pygame.Rect(displayx, 0, tiles.TILESIZE, tiles.TILESIZE)
             displayx += tiles.TILESIZE + 8
+
 
 direction = 1
 
@@ -117,10 +125,18 @@ while True:
             )
             try:
                 if event.button == 3 and map[mouse_tile[1]][mouse_tile[0]] == 0:
-                    map[mouse_tile[1]][mouse_tile[0]] = 1
+                    if inventory[selected_hotbar_slot] > 0:
+                        map[mouse_tile[1]][mouse_tile[0]] = selected_hotbar_slot
+                        inventory[selected_hotbar_slot] -= 1
                 elif event.button == 1:
-                    inventory[map[mouse_tile[1]][mouse_tile[0]]] += 1
-                    map[mouse_tile[1]][mouse_tile[0]] = 0
+                    hotbar_clicked = False
+                    for slot in hotbar_slots:
+                        if hotbar_slots[slot].collidepoint(mouse_location):
+                            hotbar_clicked = True
+                            selected_hotbar_slot = slot
+                    if not hotbar_clicked:
+                        inventory[map[mouse_tile[1]][mouse_tile[0]]] += 1
+                        map[mouse_tile[1]][mouse_tile[0]] = 0
             except (IndexError, KeyError):
                 pass
 
