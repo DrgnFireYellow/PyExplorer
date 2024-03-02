@@ -67,7 +67,7 @@ selected_hotbar_slot = 1
 def display_hotbar():
     displayx = 0
     for tile in tiles.tiles:
-        if tile:
+        if tile and inventory[tile] > 0:
             tileicon = tiles.tiles[tile].copy()
             if tile == selected_hotbar_slot:
                 pygame.draw.rect(tileicon, "white", (0, 0, tiles.TILESIZE, tiles.TILESIZE), 4)
