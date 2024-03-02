@@ -38,7 +38,7 @@ def load_map(map):
 
 direction = 1
 
-biome = "forest"
+biome = "plains"
 
 map = []
 
@@ -65,6 +65,8 @@ if biomes.biomes[biome]["trees"]["enabled"]:
 for i in range(10):
     map.append([biomes.biomes[biome]["bottom"]] * 64)
 
+jump_remaining = 0
+
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -81,7 +83,7 @@ while True:
     
     old_player_x = player_x
     old_player_y = player_y
-    
+    grounded = False
 
 
     keys = pygame.key.get_pressed()
@@ -89,8 +91,6 @@ while True:
     window.fill(pygame.Color("skyblue"))
     load_map(map)
     player_y += 4
-    
-    
     
     if keys[pygame.K_RIGHT]:
         player_x += 2
@@ -100,16 +100,29 @@ while True:
         player_x -= 2
         direction = -1
 
+
+
+
     player_rect = pygame.Rect(window.get_width() / 2, 0, tiles.TILESIZE, tiles.TILESIZE * 2)
 
     for solid in solids:
         if solid.colliderect(player_rect):
             if player_rect.midtop[1] < solid.midtop[1]:
+                grounded = True
                 player_y = old_player_y
-            if player_rect.midright[0] < solid.midright[0]:
+            if player_rect.midright[0] < solid.midright[0] and player_rect.midtop[1] + tiles.TILESIZE * 1.5 > solid.midtop[1]:
                 player_x -= 2
-            if player_rect.midright[0] > solid.midright[0]:
+            if player_rect.midright[0] > solid.midright[0] and player_rect.midtop[1] + tiles.TILESIZE * 1.5 > solid.midtop[1]:
                 player_x += 2
+    
+
+    if keys[pygame.K_UP] and grounded:
+        jump_remaining = tiles.TILESIZE * 2
+
+    if jump_remaining:
+        player_y -= 16
+        jump_remaining -= 16
+
 
     if direction == 1:
         window.blit(player_right, (window.get_width() / 2, 0))
