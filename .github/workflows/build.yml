@@ -16,3 +16,9 @@ jobs:
 
     - run: pip install -r requirements.txt pyinstaller
     - run: pyinstaller src/main.py
+    - run: |
+          git add dist
+          git config --global user.name 'Automated Build'
+          git config --global user.email 'pyexplorerautomatedbuild@users.noreply.github.com'
+          git commit -m "Build latest version for Windows, Ubuntu, and MacOS"
+          git push
