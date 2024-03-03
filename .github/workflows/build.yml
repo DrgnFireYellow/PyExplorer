@@ -15,10 +15,11 @@ jobs:
         python-version: 3.12
 
     - run: pip install -r requirements.txt pyinstaller
-    - run: pyinstaller src/main.py
+    - run: pyinstaller -F -n pyexplorer src/main.py
     - run: |
           git add dist
           git config --global user.name 'Github Actions'
           git config --global user.email '<>'
           git commit -m "Build latest version for ${{ matrix.os }}"
+          git fetch
           git push
