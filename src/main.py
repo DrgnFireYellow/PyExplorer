@@ -17,6 +17,7 @@ hotbarfont = pygame.font.Font(pygame.font.get_default_font(), int(tiles.TILESIZE
 
 window = pygame.display.set_mode((screeninfo.current_w, screeninfo.current_h))
 pygame.display.set_caption("PyExplorer")
+pygame.display.set_icon(tiles.tiles[2])
 
 
 solids = []
